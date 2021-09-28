@@ -9,7 +9,7 @@ const show = document.createElement("div");
 const result = document.createElement("div");
 // Colocando as variáveis dentro do DOM, especificamente nessa ordem
 
-section.appendChild(show);
+table.appendChild(show);
 table.appendChild(firstTd);
 table.appendChild(secondTd);
 table.appendChild(tirdTd);
@@ -40,7 +40,7 @@ const parseCalculationString = (str) => {
   let calculation = [],
     current = "";
   for (let i = 0, ch; (ch = str.charAt(i)); i++) {
-    if ("^*/+-".indexOf(ch) > -1) {
+    if ("*/+-".indexOf(ch) > -1) {
       if (current == "" && ch == "-") {
         current = "-";
       } else {
@@ -59,24 +59,24 @@ const parseCalculationString = (str) => {
 
 const calculate = (calc) => {
   // Calculando e retornando o numero
-  let ops = [
+  let operations = [
       { "*": (a, b) => a * b, "/": (a, b) => a / b },
       { "+": (a, b) => a + b, "-": (a, b) => a - b },
     ],
     newCalc = [],
-    currentOp;
+    currentOperation;
 
-  for (let i = 0; i < ops.length; i++) {
+  for (let i = 0; i < operations.length; i++) {
     for (let j = 0; j < calc.length; j++) {
-      if (ops[i][calc[j]]) {
-        currentOp = ops[i][calc[j]];
-      } else if (currentOp) {
-        newCalc[newCalc.length - 1] = currentOp(
+      if (operations[i][calc[j]]) {
+        currentOperation = operations[i][calc[j]];
+      } else if (currentOperation) {
+        newCalc[newCalc.length - 1] = currentOperation(
           newCalc[newCalc.length - 1],
           calc[j]
         );
 
-        currentOp = null;
+        currentOperation = null;
       } else {
         newCalc.push(calc[j]);
       }
@@ -87,7 +87,7 @@ const calculate = (calc) => {
   }
 
   if (calc.length > 1) {
-    console.log("Error: unable to resolve calculation");
+    console.log(calc);
     return calc;
   } else {
     return calc[0];
@@ -97,7 +97,7 @@ const calculate = (calc) => {
 const handleCalculate = () => {
   const arr = parseCalculationString(str);
   const res = calculate(arr);
-  if (!!res) {
+  if (!!res && res !== Infinity) {
     str = `${res}`;
     show.innerText = str;
   }
@@ -133,7 +133,7 @@ minus.onclick = () => handleClick("-");
 secondTd.appendChild(minus);
 
 const multiply = document.createElement("td");
-multiply.innerText = "X";
+multiply.innerText = "x";
 tirdTd.appendChild(multiply);
 multiply.onclick = () => handleClick("*");
 
@@ -141,6 +141,7 @@ multiply.onclick = () => handleClick("*");
 
 const reset = document.createElement("td");
 reset.innerText = "C";
+reset.classList = "reset";
 reset.onclick = () => handleReset();
 fortTd.appendChild(reset);
 
@@ -151,6 +152,7 @@ fortTd.appendChild(zero);
 
 const equal = document.createElement("td");
 equal.innerText = "=";
+equal.classList = "equal";
 equal.onclick = () => handleCalculate();
 fortTd.appendChild(equal);
 
@@ -158,3 +160,8 @@ const divide = document.createElement("td");
 divide.innerText = "/";
 divide.onclick = () => handleClick("/");
 fortTd.appendChild(divide);
+
+const dot = document.createElement("td");
+dot.innerText = ",";
+dot.onclick = () => handleClick(".");
+fortTd.appendChild(dot);
